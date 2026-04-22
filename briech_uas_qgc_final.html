@@ -81,11 +81,20 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .scale-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,255,255,.65);text-shadow:0 1px 3px #000;margin-bottom:2px}
 .scale-bar-el{width:80px;height:4px;border:1px solid rgba(255,255,255,.45);border-top:none}
 
-/* Compass */
-.compass-wrap{position:absolute;bottom:44px;right:10px;z-index:400}
-
-/* Attitude */
-#attiCv{position:absolute;bottom:38px;right:268px;border-radius:50%;border:1px solid var(--border2);z-index:300;display:block}
+/* Professional HUD */
+.hud-stack{position:absolute;right:14px;bottom:38px;z-index:420;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.hud-tape{width:220px;height:42px;background:linear-gradient(180deg,rgba(8,10,14,.96),rgba(8,10,14,.88));border:1px solid #2e3642;box-shadow:0 0 12px rgba(0,0,0,.35), inset 0 0 0 1px rgba(201,168,76,.08);display:flex;align-items:center;justify-content:center;position:relative}
+#hdgTapeCv{display:block;width:220px;height:42px}
+.hud-core{position:relative;width:220px;height:220px}
+#attiCv{display:block;width:220px;height:220px}
+.compass-wrap{position:absolute;right:8px;bottom:8px}
+#compassCv{width:58px;height:58px}
+.hud-side{position:absolute;top:50%;transform:translateY(-50%);width:62px;background:rgba(8,10,14,.94);border:1px solid #2e3642;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+.hud-side.left{left:-70px}
+.hud-side.right{right:-70px}
+.hud-side .k{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;text-align:center;padding-top:3px}
+.hud-side .v{font-family:'Share Tech Mono',monospace;font-size:18px;color:#e8eef7;text-align:center;padding:3px 0 5px}
+.hud-side .u{font-size:9px;color:var(--dim);text-align:center;padding-bottom:4px}
 
 /* Overlays */
 .fly-top{position:absolute;top:0;left:0;right:0;z-index:200;background:rgba(6,8,12,.93);border-bottom:1px solid var(--border2);display:flex;align-items:center;height:34px;font-family:'Share Tech Mono',monospace;font-size:10px}
@@ -242,8 +251,26 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="scale-bar-el"></div>
     </div>
 
-    <div class="compass-wrap"><canvas id="compassCv" width="54" height="54"></canvas></div>
-    <canvas id="attiCv" width="90" height="90"></canvas>
+    <div class="hud-stack" id="hudStack">
+      <div class="hud-tape"><canvas id="hdgTapeCv" width="220" height="42"></canvas></div>
+      <div class="hud-core">
+        <div class="hud-side left">
+          <div class="k">IAS</div>
+          <div class="v" id="hudIas">18.4</div>
+          <div class="u">m/s</div>
+        </div>
+        <canvas id="attiCv" width="220" height="220"></canvas>
+        <div class="compass-wrap"><canvas id="compassCv" width="58" height="58"></canvas></div>
+        <div class="hud-side right">
+          <div class="k">ALT</div>
+          <div class="v" id="hudAlt">124.3</div>
+          <div class="u">m AGL</div>
+          <div class="k">VSI</div>
+          <div class="v" id="hudVsi">+0.2</div>
+          <div class="u">m/s</div>
+        </div>
+      </div>
+    </div>
     <div class="alert-badge" id="alertBadge">⚠ WIND SHEAR DETECTED — MONITOR</div>
     <div class="coords-bar" id="coordsBar">LAT — LON —</div>
 
@@ -252,13 +279,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="fly-top">
         <div class="fc"><div class="fl">WP</div><div class="fv ok">4 / 11</div></div>
         <div class="fc"><div class="fl">Altitude</div><div class="fv" id="ftAlt">124.3 m</div></div>
-        <div class="fc"><div class="fl">Airspeed</div><div class="fv">18.4 m/s</div></div>
-        <div class="fc"><div class="fl">Groundspd</div><div class="fv">17.1 m/s</div></div>
-        <div class="fc"><div class="fl">Heading</div><div class="fv">274°</div></div>
-        <div class="fc"><div class="fl">Dist Home</div><div class="fv">1.24 km</div></div>
-        <div class="fc"><div class="fl">Dist WP</div><div class="fv">342 m</div></div>
+        <div class="fc"><div class="fl">Airspeed</div><div class="fv" id="ftAs">18.4 m/s</div></div>
+        <div class="fc"><div class="fl">Groundspd</div><div class="fv" id="ftGs">17.1 m/s</div></div>
+        <div class="fc"><div class="fl">Heading</div><div class="fv" id="ftHdg">274°</div></div>
+        <div class="fc"><div class="fl">Dist Home</div><div class="fv" id="ftDistHome">1.24 km</div></div>
+        <div class="fc"><div class="fl">Dist WP</div><div class="fv" id="ftDistWp">342 m</div></div>
         <div class="fc"><div class="fl">Time</div><div class="fv" id="ftTimer">00:14:32</div></div>
-        <div class="fc" style="margin-left:auto;border-left:1px solid var(--border)"><div class="fl">Battery</div><div class="fv ok">82%</div></div>
+        <div class="fc" style="margin-left:auto;border-left:1px solid var(--border)"><div class="fl">Battery</div><div class="fv ok" id="ftBatt">82%</div></div>
         <div class="fc"><div class="fl">Mode</div><div class="fv ok">AUTO</div></div>
       </div>
     </div>
@@ -341,6 +368,9 @@ var mSecs = 872;
 var currentTab = 'fly';
 var dT = 0.38;
 var roll = 5.1, pitch = -2.4, rDir = 0.22, pDir = 0.06;
+var headingDeg = 274;
+var airspeed = 18.4, groundSpeed = 17.1, altitudeM = 124.3, vsi = 0.2;
+var batteryPct = 82.0, distHomeKm = 1.24, distWpM = 342;
 
 var WP_LATLNG = [
   [9.00,7.10],[9.03,7.15],[9.06,7.20],[9.09,7.24],[9.12,7.28],
@@ -485,6 +515,11 @@ function animateDrone() {
   var a = WP_LATLNG[Math.min(seg, n)];
   var b = WP_LATLNG[Math.min(seg+1, n)];
   var pos = lerpLL(a, b, t2);
+  headingDeg = (Math.atan2((b[1]-a[1]), (b[0]-a[0])) * 180 / Math.PI + 360) % 360;
+  if(map) {
+    distHomeKm = map.distance(pos, HOME_LL) / 1000;
+    distWpM = map.distance(pos, b);
+  }
   droneMarker.setLatLng(pos);
   droneLabelMarker.setLatLng(pos);
   pulseCircle.setLatLng(pos);
@@ -502,49 +537,110 @@ function animateDrone() {
 function drawCompass() {
   var cv = document.getElementById('compassCv');
   var c = cv.getContext('2d');
-  var W=54, cx=27, cy=27, r=25;
+  var W=58, cx=29, cy=29, r=27;
   c.clearRect(0,0,W,W);
-  c.fillStyle='rgba(8,10,14,.9)';c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.fill();
-  c.strokeStyle='#252c38';c.lineWidth=1;c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.stroke();
-  // Tick marks
-  for(var i=0;i<12;i++){
-    var a2=i/12*Math.PI*2-Math.PI/2;
-    var len=i%3===0?5:2;
-    c.strokeStyle=i%3===0?'#4a5568':'#2a3040';c.lineWidth=1;
-    c.beginPath();c.moveTo(cx+Math.cos(a2)*(r-len-1),cy+Math.sin(a2)*(r-len-1));
-    c.lineTo(cx+Math.cos(a2)*(r-1),cy+Math.sin(a2)*(r-1));c.stroke();
+  c.fillStyle='rgba(8,10,14,.95)';c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.fill();
+  c.strokeStyle='#2e3642';c.lineWidth=1.3;c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.stroke();
+  c.save();
+  c.translate(cx, cy);
+  c.rotate(-headingDeg * Math.PI / 180);
+  for(var i=0;i<36;i++){
+    var a2=i/36*Math.PI*2-Math.PI/2;
+    var major=i%3===0;
+    var len=major?7:3;
+    c.strokeStyle=major?'#6c7b91':'#3a4455';c.lineWidth=major?1.2:.9;
+    c.beginPath();c.moveTo(Math.cos(a2)*(r-len-2),Math.sin(a2)*(r-len-2));
+    c.lineTo(Math.cos(a2)*(r-2),Math.sin(a2)*(r-2));c.stroke();
   }
-  ['N','E','S','W'].forEach(function(d,i){
-    var a2=i*Math.PI/2-Math.PI/2,tx=cx+Math.cos(a2)*17,ty=cy+Math.sin(a2)*17+3.5;
-    c.fillStyle=d==='N'?'#C9A84C':'#6a7585';
-    c.font='bold 9px "Barlow Condensed"';c.textAlign='center';c.fillText(d,tx,ty);
+  [['N',0],['E',90],['S',180],['W',270]].forEach(function(d){
+    var a2=d[1]*Math.PI/180-Math.PI/2;
+    var tx=Math.cos(a2)*16,ty=Math.sin(a2)*16+3.5;
+    c.fillStyle=d[0]==='N'?'#C9A84C':'#9aa5b5';
+    c.font='bold 9px "Barlow Condensed"';c.textAlign='center';c.fillText(d[0],tx,ty);
   });
-  c.fillStyle='#C9A84C';c.beginPath();c.moveTo(cx,cy-22);c.lineTo(cx+3.5,cy);c.lineTo(cx,cy-9);c.closePath();c.fill();
-  c.fillStyle='#2a3040';c.beginPath();c.moveTo(cx,cy+22);c.lineTo(cx-3.5,cy);c.lineTo(cx,cy+9);c.closePath();c.fill();
+  c.restore();
+  c.fillStyle='#C9A84C';c.beginPath();c.moveTo(cx,cy-r+3);c.lineTo(cx-4,cy-r+11);c.lineTo(cx+4,cy-r+11);c.closePath();c.fill();
+  c.fillStyle='#d8dde6';c.font='bold 10px "Share Tech Mono"';c.textAlign='center';c.fillText(('00'+Math.round(headingDeg)).slice(-3),cx,cy+4);
 }
 
 // ══ ATTITUDE ══
 function drawAtti() {
   var cv = document.getElementById('attiCv');
   var c = cv.getContext('2d');
-  var W=90, cx=45, cy=45, r=43;
+  var W=220, cx=110, cy=110, r=104;
   c.clearRect(0,0,W,W);c.save();c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.clip();
-  var po=(pitch/45)*r*.5, rr=roll*Math.PI/180;
+  var po=(pitch/25)*r*.42, rr=roll*Math.PI/180;
   c.save();c.translate(cx,cy+po);c.rotate(rr);
-  var sg=c.createLinearGradient(0,-80,0,0);sg.addColorStop(0,'#082040');sg.addColorStop(1,'#0d2d55');
+  var sg=c.createLinearGradient(0,-220,0,0);sg.addColorStop(0,'#102f57');sg.addColorStop(1,'#225b8f');
   c.fillStyle=sg;c.fillRect(-200,-200,400,200);
-  var gg=c.createLinearGradient(0,0,0,80);gg.addColorStop(0,'#2a1a08');gg.addColorStop(1,'#1a1005');
+  var gg=c.createLinearGradient(0,0,0,220);gg.addColorStop(0,'#5e3f1f');gg.addColorStop(1,'#2c1b0d');
   c.fillStyle=gg;c.fillRect(-200,0,400,200);
-  c.strokeStyle='rgba(201,168,76,.7)';c.lineWidth=1.2;c.beginPath();c.moveTo(-180,0);c.lineTo(180,0);c.stroke();
-  for(var i=-3;i<=3;i++){if(!i)continue;c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=.5;c.beginPath();c.moveTo(i%2?-10:-16,i*8);c.lineTo(i%2?10:16,i*8);c.stroke();}
+  c.strokeStyle='rgba(240,244,248,.9)';c.lineWidth=2;c.beginPath();c.moveTo(-220,0);c.lineTo(220,0);c.stroke();
+  for(var deg=-30;deg<=30;deg+=5){
+    if(deg===0) continue;
+    var y=(deg/5)*10;
+    var longLine = deg%10===0;
+    var len = longLine?42:22;
+    c.strokeStyle='rgba(240,244,248,.68)';c.lineWidth=longLine?1.4:1;
+    c.beginPath();c.moveTo(-len,y);c.lineTo(len,y);c.stroke();
+    if(longLine){
+      c.fillStyle='rgba(240,244,248,.75)';
+      c.font='10px "Share Tech Mono"';
+      c.textAlign='right'; c.fillText(Math.abs(deg),-len-5,y+3);
+      c.textAlign='left'; c.fillText(Math.abs(deg),len+5,y+3);
+    }
+  }
   c.restore();
-  c.strokeStyle='#fff';c.lineWidth=1.5;
-  c.beginPath();c.moveTo(cx-22,cy);c.lineTo(cx-7,cy);c.stroke();
-  c.beginPath();c.moveTo(cx+7,cy);c.lineTo(cx+22,cy);c.stroke();
-  c.beginPath();c.moveTo(cx,cy-3);c.lineTo(cx,cy+3);c.stroke();
-  c.fillStyle='#C9A84C';c.beginPath();c.arc(cx,cy,2.5,0,Math.PI*2);c.fill();
+  c.strokeStyle='#f6f8fb';c.lineWidth=3;
+  c.beginPath();c.moveTo(cx-55,cy);c.lineTo(cx-20,cy);c.stroke();
+  c.beginPath();c.moveTo(cx+20,cy);c.lineTo(cx+55,cy);c.stroke();
+  c.beginPath();c.moveTo(cx-20,cy);c.lineTo(cx,cy+12);c.lineTo(cx+20,cy);c.stroke();
+  c.fillStyle='#C9A84C';c.fillRect(cx-3,cy-3,6,6);
+  c.strokeStyle='rgba(230,235,243,.65)'; c.lineWidth=1.2;
+  for(var b=0;b<=60;b+=10){
+    var ba=(b-30)*Math.PI/180;
+    var inner=r-10, outer=b%30===0?r-1:r-5;
+    c.beginPath();
+    c.moveTo(cx+Math.sin(ba)*inner,cy-Math.cos(ba)*inner);
+    c.lineTo(cx+Math.sin(ba)*outer,cy-Math.cos(ba)*outer);
+    c.stroke();
+  }
   c.restore();
-  c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.strokeStyle='#252c38';c.lineWidth=2;c.stroke();
+  c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.strokeStyle='#2e3642';c.lineWidth=2.5;c.stroke();
+}
+
+function drawHeadingTape() {
+  var cv = document.getElementById('hdgTapeCv');
+  var c = cv.getContext('2d');
+  var W = cv.width, H = cv.height, cx = W/2;
+  c.clearRect(0,0,W,H);
+  c.fillStyle = 'rgba(8,10,14,.96)';
+  c.fillRect(0,0,W,H);
+  c.strokeStyle = '#2e3642';
+  c.strokeRect(0.5,0.5,W-1,H-1);
+  for(var deg = -40; deg <= 40; deg += 5){
+    var hdg = (Math.round(headingDeg/5)*5 + deg + 360) % 360;
+    var x = cx + deg * 4;
+    var major = deg % 10 === 0;
+    c.strokeStyle = major ? '#8f9bb0' : '#4d5b70';
+    c.lineWidth = major ? 1.2 : 1;
+    c.beginPath();
+    c.moveTo(x, H - 14);
+    c.lineTo(x, H - (major ? 30 : 24));
+    c.stroke();
+    if(major){
+      c.fillStyle = '#dce2ec';
+      c.font = '10px "Share Tech Mono"';
+      c.textAlign = 'center';
+      c.fillText(('00' + hdg).slice(-3), x, 12);
+    }
+  }
+  c.fillStyle = 'rgba(201,168,76,.16)';
+  c.fillRect(cx-20,0,40,H);
+  c.strokeStyle = '#C9A84C';
+  c.strokeRect(cx-20.5,0.5,41,H-1);
+  c.fillStyle = '#C9A84C';
+  c.beginPath(); c.moveTo(cx, H-2); c.lineTo(cx-6, H-10); c.lineTo(cx+6, H-10); c.closePath(); c.fill();
 }
 
 // ══ ELEVATION ══
@@ -603,6 +699,15 @@ function toggleConn() {
   } else {
     ['bbAlt','bbAs','bbGs','bbVs'].forEach(function(id){document.getElementById(id).textContent='0.0';});
     document.getElementById('bbThr').textContent='0';
+    document.getElementById('hudIas').textContent='0.0';
+    document.getElementById('hudAlt').textContent='0.0';
+    document.getElementById('hudVsi').textContent='0.0';
+    document.getElementById('ftAs').textContent='0.0 m/s';
+    document.getElementById('ftGs').textContent='0.0 m/s';
+    document.getElementById('ftHdg').textContent='---°';
+    document.getElementById('ftDistHome').textContent='0.00 km';
+    document.getElementById('ftDistWp').textContent='0 m';
+    document.getElementById('ftBatt').textContent='0%';
     if(map) map.flyTo([9.0, 7.2], 6, {duration:1.5});
   }
 }
@@ -616,7 +721,7 @@ function setTab(t) {
   });
   document.getElementById('flyOverlay').style.display = t==='fly' ? 'block' : 'none';
   document.getElementById('planOverlay').style.display = t==='plan' ? 'block' : 'none';
-  document.getElementById('attiCv').style.display = t==='fly' ? 'block' : 'none';
+  document.getElementById('hudStack').style.display = t==='fly' ? 'flex' : 'none';
   if(t==='plan') { drawElev(); drawTpls(); }
   if(map) setTimeout(function(){ map.invalidateSize(); }, 50);
 }
@@ -630,9 +735,28 @@ setInterval(function() {
   var ft=document.getElementById('ftTimer'); if(ft) ft.textContent=ts;
   document.getElementById('bbTime').textContent='0 '+ts;
   var alt=(124+Math.sin(mSecs*.08)*.6).toFixed(1);
+  altitudeM = Number(alt);
+  airspeed = Number((18.4 + Math.sin(mSecs*.06)*0.8).toFixed(1));
+  groundSpeed = Number((17.1 + Math.cos(mSecs*.05)*0.7).toFixed(1));
+  vsi = Number((Math.sin(mSecs*.12)*1.4).toFixed(1));
+  batteryPct = Math.max(35, Number((82 - (mSecs-872)*0.0022).toFixed(1)));
   document.getElementById('tAlt').textContent=alt;
+  document.getElementById('tGs').textContent=groundSpeed.toFixed(1);
+  document.getElementById('tVs').textContent=(vsi>0?'+':'')+vsi.toFixed(1);
   var fa=document.getElementById('ftAlt'); if(fa) fa.textContent=alt+' m';
+  document.getElementById('ftAs').textContent=airspeed.toFixed(1)+' m/s';
+  document.getElementById('ftGs').textContent=groundSpeed.toFixed(1)+' m/s';
+  document.getElementById('ftHdg').textContent=('00'+Math.round(headingDeg)).slice(-3)+'°';
+  document.getElementById('ftDistHome').textContent=distHomeKm.toFixed(2)+' km';
+  document.getElementById('ftDistWp').textContent=Math.round(distWpM)+' m';
+  document.getElementById('ftBatt').textContent=Math.round(batteryPct)+'%';
   document.getElementById('bbAlt').textContent=alt;
+  document.getElementById('bbAs').textContent=airspeed.toFixed(1);
+  document.getElementById('bbGs').textContent=groundSpeed.toFixed(1);
+  document.getElementById('bbVs').textContent=(vsi>0?'+':'')+vsi.toFixed(1);
+  document.getElementById('hudIas').textContent=airspeed.toFixed(1);
+  document.getElementById('hudAlt').textContent=altitudeM.toFixed(1);
+  document.getElementById('hudVsi').textContent=(vsi>0?'+':'')+vsi.toFixed(1);
 }, 1000);
 
 // ══ ANIMATION LOOP ══
@@ -642,6 +766,8 @@ function frame() {
   if(roll>10||roll<-10) rDir*=-1;
   if(pitch>4||pitch<-7) pDir*=-1;
   drawAtti();
+  drawHeadingTape();
+  drawCompass();
   requestAnimationFrame(frame);
 }
 
@@ -665,6 +791,7 @@ initMap();
 drawCompass();
 drawTpls();
 drawElev();
+drawHeadingTape();
 frame();
 </script>
 </body>
